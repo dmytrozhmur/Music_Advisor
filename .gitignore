@@ -1,0 +1,27 @@
+# Project exclude paths
+/.gradle/
+/Music Advisor/task/build/
+/Music Advisor/task/out/
+/Music Advisor/task/out/production/classes/
+/Topics/Anonymous classes/An anonymous class with three methods/out/
+/Topics/Anonymous classes/An anonymous class with three methods/out/production/classes/
+/Topics/ArrayList/Creating list/out/
+/Topics/ArrayList/Creating list/out/production/classes/
+/Topics/Decorator/Breakfast Decorator/out/
+/Topics/Decorator/Breakfast Decorator/out/production/classes/
+/Topics/Decorator/Coffee Decorator/out/
+/Topics/Decorator/Coffee Decorator/out/production/classes/
+/Topics/Decorator/Pizza Decorator/out/
+/Topics/Decorator/Pizza Decorator/out/production/classes/
+/Topics/Generics and Object/Initialize an object of a generic class/out/
+/Topics/Generics and Object/Initialize an object of a generic class/out/production/classes/
+/Topics/Introduction to generic programming/Correct the program/out/
+/Topics/Introduction to generic programming/Correct the program/out/production/classes/
+/Topics/Strategy/Pick your team/out/
+/Topics/Strategy/Pick your team/out/production/classes/
+/Topics/StringBuilder/Concat all strings without digits/out/
+/Topics/StringBuilder/Concat all strings without digits/out/production/classes/
+/Topics/StringBuilder/The English alphabet/out/
+/Topics/StringBuilder/The English alphabet/out/production/classes/
+/Topics/What is an exception/Avoid division by zero/out/
+/Topics/What is an exception/Avoid division by zero/out/production/classes/
