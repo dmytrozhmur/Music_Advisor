@@ -8,8 +8,8 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        String access = null;
-        String resource = null;
+        String access = "https://accounts.spotify.com";
+        String resource = "https://api.spotify.com";
         int pageSpace = 5;
 
         for (int i = 0; i < args.length; i++) {
@@ -18,8 +18,7 @@ public class Main {
             if("-page".equals(args[i])) pageSpace = Integer.parseInt(args[i+1]);
         }
 
-        access = access == null ? "https://accounts.spotify.com" : access;
-        resource = (resource == null ? "https://api.spotify.com" : resource) + "/v1/browse/";
+        resource += "/v1/browse/";
 
         Controller controller = new Controller(new CommandLineView(pageSpace));
         controller.start(access, resource);
