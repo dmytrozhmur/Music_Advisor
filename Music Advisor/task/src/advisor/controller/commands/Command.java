@@ -11,5 +11,5 @@ import java.net.http.HttpResponse;
 import java.util.Collection;
 
 public interface Command {
-    boolean execute(final String address, DataSource source);
+    boolean execute(final String address, final DataSource source);
 }

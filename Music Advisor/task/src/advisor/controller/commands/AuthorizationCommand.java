@@ -13,21 +13,18 @@ import java.util.List;
 
 import com.google.gson.*;
 
-import static advisor.controller.utils.HttpHandler.doPOSTRequest;
+import static advisor.controller.utils.HttpHandler.*;
 
 public class AuthorizationCommand implements Command {
     private static String code;
 
     @Override
-    public boolean execute(final String address, DataSource source) {
+    public boolean execute(final String address, final DataSource source) {
         String accessToken;
         HttpServer server;
         User currUser = source.getUser();
 
-        View.otherInform(String.format("use this link to request the access code:\n" +
-                "%s/authorize?client_id=644f4db58a604873bac7183a410fbff1&" +
-                "redirect_uri=http://localhost:8089/&" +
-                "response_type=code", address));
+        View.otherInform(String.format(ACCESS_LINK, address, PORT));
         try {
             server = createServer();
         } catch (IOException ioe) {
@@ -76,13 +73,13 @@ public class AuthorizationCommand implements Command {
 
     private HttpServer createServer() throws IOException {
         HttpServer server = HttpServer.create();
-        server.bind(new InetSocketAddress(8089), 0);
+        server.bind(new InetSocketAddress(PORT), 0);
         server.createContext("/", new HttpHandler() {
             @Override
             public void handle(HttpExchange exchange) throws IOException {
                 code = exchange.getRequestURI().getQuery();
 
-                String body = "";
+                String body;
                 if(code.startsWith("code")) {
                     body = "Got the code. Return back to your program.";
                 } else {

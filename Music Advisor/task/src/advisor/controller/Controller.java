@@ -13,6 +13,10 @@ import java.util.List;
 public class Controller {
     private View view;
     private DataSource source = new DataSource();
+    private static final String NEXT = "next";
+    private static final String PREV = "prev";
+    private static final String AUTH = "auth";
+    private static final String EXIT = "exit";
 
     public Controller(View view) {
         this.view = view;
@@ -25,7 +29,7 @@ public class Controller {
         while (true) {
             String input = getUserInput();
 
-            if(!source.getUser().isAccessConfirmed() && !input.equals("auth")) {
+            if(!source.getUser().isAccessConfirmed() && !input.equals(AUTH) && !input.equals(EXIT)) {
                 view.noAccessInform();
                 continue;
             }
@@ -33,10 +37,10 @@ public class Controller {
             int pageSize = view.getPageSize();
             List<String> content = source.getRequestedContent();
 
-            while (input.equals("next") || input.equals("prev")) {
-                if(input.equals("next") && !view.checkPages(++pageNumber, quantityOfPages))
+            while (input.equals(NEXT) || input.equals(PREV)) {
+                if(input.equals(NEXT) && !view.checkPages(++pageNumber, quantityOfPages))
                     pageNumber--;
-                else if(input.equals("prev") && !view.checkPages(--pageNumber, quantityOfPages))
+                else if(input.equals(PREV) && !view.checkPages(--pageNumber, quantityOfPages))
                     pageNumber++;
                 else view.showPage(content, pageNumber, quantityOfPages);
                 input = getUserInput();
@@ -55,7 +59,7 @@ public class Controller {
                     CommandFactory.valueOf(commandName.toUpperCase()).getCommand(commandParam);
             if (command == null) break;
 
-            String address = input.equals("auth") ? access : resource;
+            String address = input.equals(AUTH) ? access : resource;
             boolean isCommandPerformed = command.execute(address, source);
 
             quantityOfPages = content.size() / pageSize
@@ -68,8 +72,11 @@ public class Controller {
     }
 
     public String getUserInput() throws IOException {
-        System.out.print("> ");
+        String result;
+        View.otherInform("> ");
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        return reader.readLine();
+        result = reader.readLine();
+
+        return result;
     }
 }

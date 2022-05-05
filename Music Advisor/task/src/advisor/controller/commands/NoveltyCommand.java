@@ -11,24 +11,34 @@ import static advisor.controller.utils.HttpHandler.doGETRequest;
 import static advisor.controller.utils.HttpHandler.isResponseValid;
 
 public class NoveltyCommand implements Command {
+    private static final String NOVELTY_ADDRESS = "%snew-releases";
 
     @Override
-    public boolean execute(final String address, DataSource source) {
-        String responseString = doGETRequest(address + "new-releases", source);
+    public boolean execute(final String address, final DataSource source) {
+        String responseString = doGETRequest(
+                String.format(NOVELTY_ADDRESS, address), source);
         List<String> albums = new ArrayList<>();
 
         if(!isResponseValid(responseString)) return false;
 
-        JsonArray albumsArray = JsonParser.parseString(responseString)
+        extractNovelty(responseString, albums);
+
+        source.setRequestedContent(albums);
+
+        return true;
+    }
+
+    private void extractNovelty(String from, List<String> to) {
+        JsonArray albumsArray = JsonParser.parseString(from)
                 .getAsJsonObject()
                 .get("albums")
                 .getAsJsonObject()
                 .get("items")
                 .getAsJsonArray();
+
         for (JsonElement album: albumsArray) {
             StringBuilder albumString = new StringBuilder();
             albumString.append(album.getAsJsonObject().get("name").getAsString()).append("\n");
-
             JsonArray artists = album.getAsJsonObject()
                     .get("artists")
                     .getAsJsonArray();
@@ -38,13 +48,8 @@ public class NoveltyCommand implements Command {
                 if(i < artists.size()-1) albumString.append(", ");
                 if(i == artists.size()-1) albumString.append("]\n");
             }
-
             albumString.append(album.getAsJsonObject().get("href").getAsString()).append("\n");
-            albums.add(albumString.toString());
+            to.add(albumString.toString());
         }
-
-        source.setRequestedContent(albums);
-
-        return true;
     }
 }

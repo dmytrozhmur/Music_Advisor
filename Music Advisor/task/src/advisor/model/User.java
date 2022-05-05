@@ -8,8 +8,6 @@ public class User {
     private boolean accessConfirmed;
     private String accessToken;
 
-    public User() {}
-
     public boolean isAccessConfirmed() {
         return accessConfirmed;
     }
