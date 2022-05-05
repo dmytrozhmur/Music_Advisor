@@ -11,7 +11,7 @@ import java.net.http.HttpResponse;
 import java.util.Base64;
 
 public class HttpHandler {
-    public static final int PORT = 45678;
+    public static final int PORT = 8089;
     public static final String ACCESS_LINK =
             "use this link to request the access code:\n" +
                     "%s/authorize?client_id=644f4db58a604873bac7183a410fbff1&" +

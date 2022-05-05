@@ -34,7 +34,7 @@ public class AuthorizationCommand implements Command {
 
         server.start();
         View.otherInform("waiting for code...");
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 100; i++) {
             if(gotCode()) break;
             else {
                 try {
@@ -80,7 +80,7 @@ public class AuthorizationCommand implements Command {
                 code = exchange.getRequestURI().getQuery();
 
                 String body;
-                if(code.startsWith("code")) {
+                if(code != null && code.startsWith("code")) {
                     body = "Got the code. Return back to your program.";
                 } else {
                     body = "Authorization code not found. Try again.";

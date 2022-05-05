@@ -39,7 +39,7 @@ public enum CommandFactory {
     EXIT {
         @Override
         public Command getCommand(String param) {
-            return null;
+            return new ExitCommand();
         }
     };
 

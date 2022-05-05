@@ -57,7 +57,6 @@ public class Controller {
 
             Command command =
                     CommandFactory.valueOf(commandName.toUpperCase()).getCommand(commandParam);
-            if (command == null) break;
 
             String address = input.equals(AUTH) ? access : resource;
             boolean isCommandPerformed = command.execute(address, source);
