@@ -5,8 +5,8 @@ import java.util.List;
 public class CommandLineView implements View {
     private final int pageSize;
 
-    public CommandLineView(int pageSpace) {
-        this.pageSize = pageSpace;
+    public CommandLineView(int pageSize) {
+        this.pageSize = pageSize;
     }
 
     @Override

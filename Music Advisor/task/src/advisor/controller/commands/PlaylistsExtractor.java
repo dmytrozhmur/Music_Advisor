@@ -1,6 +1,5 @@
 package advisor.controller.commands;
 
-import advisor.model.DataSource;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -9,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class PlaylistsExtractor {
-    public List<String> extract(String address, String serverResponse) {
+    public List<String> extract(String serverResponse) {
         List<String> playlists = new ArrayList<>();
 
         JsonArray playlistsArray = JsonParser.parseString(serverResponse)

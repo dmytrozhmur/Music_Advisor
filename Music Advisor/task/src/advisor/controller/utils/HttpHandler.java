@@ -11,6 +11,13 @@ import java.net.http.HttpResponse;
 import java.util.Base64;
 
 public class HttpHandler {
+    public static final int PORT = 45678;
+    public static final String ACCESS_LINK =
+            "use this link to request the access code:\n" +
+                    "%s/authorize?client_id=644f4db58a604873bac7183a410fbff1&" +
+                    "redirect_uri=http://localhost:%s/&" +
+                    "response_type=code";
+
     public static String doPOSTRequest(final String address, String code) throws Exception {
         String clientID = "644f4db58a604873bac7183a410fbff1";
         String clientSecret = "ccd507db72df4dcda405b2b5a6c3c69a";
@@ -22,7 +29,7 @@ public class HttpHandler {
                         Base64.getEncoder().encodeToString((clientID + ":" + clientSecret).getBytes()))
                 .uri(URI.create(String.format("%s/api/token", address)))
                 .POST(HttpRequest.BodyPublishers.ofString(String.format(
-                        "grant_type=authorization_code&code=%s&redirect_uri=http://localhost:8089/", code)))
+                        "grant_type=authorization_code&code=%s&redirect_uri=http://localhost:%s/", code, PORT)))
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
