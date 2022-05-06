@@ -3,12 +3,15 @@ package advisor.controller.utils;
 import advisor.model.DataSource;
 import advisor.view.View;
 
+import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Base64;
+import java.util.Properties;
 
 public class HttpHandler {
     public static final int PORT = 8089;
@@ -17,10 +20,17 @@ public class HttpHandler {
                     "%s/authorize?client_id=644f4db58a604873bac7183a410fbff1&" +
                     "redirect_uri=http://localhost:%s/&" +
                     "response_type=code";
+    private static final String CREDENTIALS_ADDRESS =
+            "C:/Users/Tamada/IdeaProjects/Music Advisor/Music Advisor/task/src/advisor/controller/utils/credentials.properties";
 
-    public static String doPOSTRequest(final String address, String code) throws Exception {
-        String clientID = "644f4db58a604873bac7183a410fbff1";
-        String clientSecret = "ccd507db72df4dcda405b2b5a6c3c69a";
+    public static String doPOSTRequest(final String address, String code) throws IOException, InterruptedException {
+        FileReader reader = new FileReader(CREDENTIALS_ADDRESS);
+
+        Properties creds = new Properties();
+        creds.load(reader);
+
+        String clientID = creds.getProperty("clientID");
+        String clientSecret = creds.getProperty("clientSecret");
 
         HttpClient client = HttpClient.newBuilder().build();
         HttpRequest request = HttpRequest.newBuilder()
@@ -38,7 +48,7 @@ public class HttpHandler {
 
     public static String doGETRequest(String resource, DataSource source) {
         HttpRequest httpRequest = HttpRequest.newBuilder()
-                .header("Authorization", "Bearer " + source.getUser().getAccessToken())
+                .header("Authorization", "Bearer " + source.getAccessToken())
                 .uri(URI.create(resource))
                 .GET()
                 .build();

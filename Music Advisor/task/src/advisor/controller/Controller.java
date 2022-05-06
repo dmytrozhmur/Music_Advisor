@@ -11,12 +11,12 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 public class Controller {
-    private View view;
-    private DataSource source = new DataSource();
     private static final String NEXT = "next";
     private static final String PREV = "prev";
     private static final String AUTH = "auth";
     private static final String EXIT = "exit";
+    private final View view;
+    private final DataSource source = new DataSource();
 
     public Controller(View view) {
         this.view = view;
@@ -29,7 +29,9 @@ public class Controller {
         while (true) {
             String input = getUserInput();
 
-            if(!source.getUser().isAccessConfirmed() && !input.equals(AUTH) && !input.equals(EXIT)) {
+            if(source.getAccessToken() == null
+                    && !input.equals(AUTH)
+                    && !input.equals(EXIT)) {
                 view.noAccessInform();
                 continue;
             }
@@ -45,10 +47,16 @@ public class Controller {
                 else view.showPage(content, pageNumber, quantityOfPages);
                 input = getUserInput();
             }
+
+            Command command;
+            try {
+                command = makeCommand(input);
+            } catch (IllegalArgumentException iae) {
+                View.otherInform("No such command");
+                continue;
+            }
+
             pageNumber = 1;
-
-            Command command = makeCommand(input);
-
             String address = input.equals(AUTH) ? access : resource;
             boolean isCommandPerformed = command.execute(address, source);
 

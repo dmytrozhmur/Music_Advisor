@@ -1,10 +1,7 @@
 package advisor.controller.commands;
 
 import advisor.model.DataSource;
-import advisor.model.User;
 import advisor.view.View;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
@@ -22,7 +19,6 @@ public class AuthorizationCommand implements Command {
     public boolean execute(final String address, final DataSource source) {
         String accessToken;
         HttpServer server;
-        User currUser = source.getUser();
 
         View.otherInform(String.format(ACCESS_LINK, address, PORT));
         try {
@@ -44,8 +40,12 @@ public class AuthorizationCommand implements Command {
                 }
             }
         }
+
         server.stop(10);
-        if(!gotCode()) return false;
+        if(!gotCode()) {
+            View.otherInform("no code received");
+            return false;
+        }
         code = code.replace("code=", "");
         View.otherInform("code received\nmaking http request for access_token...");
 
@@ -59,8 +59,7 @@ public class AuthorizationCommand implements Command {
             return false;
         }
 
-        currUser.setAccessConfirmed(true);
-        currUser.setAccessToken(accessToken);
+        source.setAccessToken(accessToken);
         source.setRequestedContent(List.of(new String[]{"Success!"}));
 
         return true;
@@ -73,22 +72,19 @@ public class AuthorizationCommand implements Command {
     private HttpServer createServer() throws IOException {
         HttpServer server = HttpServer.create();
         server.bind(new InetSocketAddress(PORT), 0);
-        server.createContext("/", new HttpHandler() {
-            @Override
-            public void handle(HttpExchange exchange) throws IOException {
-                code = exchange.getRequestURI().getQuery();
+        server.createContext("/", exchange -> {
+            while (code == null) code = exchange.getRequestURI().getQuery();
 
-                String body;
-                if(code != null && code.startsWith("code")) {
-                    body = "Got the code. Return back to your program.";
-                } else {
-                    body = "Authorization code not found. Try again.";
-                }
-
-                exchange.sendResponseHeaders(200, body.length());
-                exchange.getResponseBody().write(body.getBytes());
-                exchange.getResponseBody().close();
+            String body;
+            if(code.startsWith("code")) {
+                body = "Got the code. Return back to your program.";
+            } else {
+                body = "Authorization code not found. Try again.";
             }
+
+            exchange.sendResponseHeaders(200, body.length());
+            exchange.getResponseBody().write(body.getBytes());
+            exchange.getResponseBody().close();
         });
 
         return server;

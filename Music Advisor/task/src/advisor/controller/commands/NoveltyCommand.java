@@ -6,7 +6,6 @@ import com.google.gson.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static advisor.controller.utils.ForTests.*;
 import static advisor.controller.utils.HttpHandler.doGETRequest;
 import static advisor.controller.utils.HttpHandler.isResponseValid;
 

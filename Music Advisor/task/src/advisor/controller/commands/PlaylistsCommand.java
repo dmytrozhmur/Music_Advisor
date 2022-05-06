@@ -5,7 +5,6 @@ import advisor.view.View;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static advisor.controller.utils.HttpHandler.doGETRequest;
@@ -13,7 +12,7 @@ import static advisor.controller.utils.HttpHandler.isResponseValid;
 
 public class PlaylistsCommand extends PlaylistsExtractor implements Command {
     private static final String PLAYLISTS_ADDRESS = "%scategories/%s/playlists";
-    private String category;
+    private final String category;
 
     public PlaylistsCommand(String category) {
         this.category = category;
@@ -22,10 +21,11 @@ public class PlaylistsCommand extends PlaylistsExtractor implements Command {
     @Override
     public boolean execute(final String address, final DataSource source) {
         BiMap<String, String> categoriesMap = HashBiMap.create();
+        Map<String, String> sourceCategories = source.getCategories();
 
-        if(categoriesMap.isEmpty()) new CategoriesCommand().execute(address, source);
+        if(sourceCategories.isEmpty()) new CategoriesCommand().execute(address, source);
 
-        categoriesMap.putAll(source.getCategories());
+        categoriesMap.putAll(sourceCategories);
         categoriesMap = categoriesMap.inverse();
 
         String categoryId = categoriesMap.get(category);
