@@ -3,6 +3,10 @@ package advisor.controller.commands;
 import advisor.model.DataSource;
 import advisor.view.View;
 import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static advisor.controller.utils.HttpHandler.doGETRequest;
 import static advisor.controller.utils.HttpHandler.isResponseValid;
@@ -17,10 +21,11 @@ public class PlaylistsCommand extends PlaylistsExtractor implements Command {
 
     @Override
     public boolean execute(final String address, final DataSource source) {
-        BiMap<String, String> categoriesMap = source.getCategories();
+        BiMap<String, String> categoriesMap = HashBiMap.create();
 
         if(categoriesMap.isEmpty()) new CategoriesCommand().execute(address, source);
 
+        categoriesMap.putAll(source.getCategories());
         categoriesMap = categoriesMap.inverse();
 
         String categoryId = categoriesMap.get(category);

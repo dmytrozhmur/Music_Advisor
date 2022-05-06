@@ -34,7 +34,7 @@ public class AuthorizationCommand implements Command {
 
         server.start();
         View.otherInform("waiting for code...");
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10000; i++) {
             if(gotCode()) break;
             else {
                 try {
@@ -44,12 +44,11 @@ public class AuthorizationCommand implements Command {
                 }
             }
         }
-
+        server.stop(10);
         if(!gotCode()) return false;
         code = code.replace("code=", "");
         View.otherInform("code received\nmaking http request for access_token...");
 
-        server.stop(10);
         try {
             String response = doPOSTRequest(address, code);
             accessToken = JsonParser.parseString(response).getAsJsonObject()

@@ -48,7 +48,14 @@ public class NoveltyCommand implements Command {
                 if(i < artists.size()-1) albumString.append(", ");
                 if(i == artists.size()-1) albumString.append("]\n");
             }
-            albumString.append(album.getAsJsonObject().get("href").getAsString()).append("\n");
+            albumString
+                    .append(album
+                            .getAsJsonObject()
+                            .get("external_urls")
+                            .getAsJsonObject()
+                            .get("spotify")
+                            .getAsString())
+                    .append("\n");
             to.add(albumString.toString());
         }
     }

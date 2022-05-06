@@ -6,7 +6,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.common.collect.*;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static advisor.controller.utils.HttpHandler.doGETRequest;
 import static advisor.controller.utils.HttpHandler.isResponseValid;
@@ -18,7 +20,7 @@ public class CategoriesCommand implements Command {
     public boolean execute(final String address, final DataSource source) {
         String responseString = doGETRequest(
                 String.format(CATEGORIES_ADDRESS, address), source);
-        BiMap<String, String> categoriesMap = HashBiMap.create();
+        Map<String, String> categoriesMap = new LinkedHashMap<>();
 
         if(!isResponseValid(responseString)) return false;
 
@@ -30,7 +32,7 @@ public class CategoriesCommand implements Command {
         return true;
     }
 
-    private void extractCategories(String from, BiMap<String, String> to) {
+    private void extractCategories(String from, Map<String, String> to) {
         JsonArray categories = JsonParser.parseString(from)
                 .getAsJsonObject()
                 .get("categories")

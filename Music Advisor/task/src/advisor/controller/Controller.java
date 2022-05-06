@@ -47,16 +47,7 @@ public class Controller {
             }
             pageNumber = 1;
 
-            String[] separatedInput = input.split(" ");
-            String commandName = separatedInput[0];
-            String commandParam = "";
-            for (int i = 1; i < separatedInput.length; i++) {
-                commandParam += separatedInput[i];
-                if(i < separatedInput.length - 1) commandParam += " ";
-            }
-
-            Command command =
-                    CommandFactory.valueOf(commandName.toUpperCase()).getCommand(commandParam);
+            Command command = makeCommand(input);
 
             String address = input.equals(AUTH) ? access : resource;
             boolean isCommandPerformed = command.execute(address, source);
@@ -77,5 +68,17 @@ public class Controller {
         result = reader.readLine();
 
         return result;
+    }
+
+    private Command makeCommand(String input) {
+        String[] separatedInput = input.split(" ");
+        String commandName = separatedInput[0];
+        String commandParam = "";
+        for (int i = 1; i < separatedInput.length; i++) {
+            commandParam += separatedInput[i];
+            if(i < separatedInput.length - 1) commandParam += " ";
+        }
+
+        return CommandFactory.valueOf(commandName.toUpperCase()).getCommand(commandParam);
     }
 }
