@@ -4,6 +4,7 @@ import advisor.model.DataSource;
 import advisor.view.View;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
@@ -21,14 +22,21 @@ public class HttpHandler {
                     "redirect_uri=http://localhost:%s/&" +
                     "response_type=code";
     private static final String CREDENTIALS_ADDRESS =
-            "C:/Users/Tamada/IdeaProjects/Music Advisor/Music Advisor/task/src/advisor/controller/utils/credentials.properties";
+            "Music Advisor/task/src/advisor/controller/utils/credentials.properties";
+    private static FileReader reader;
+    private static Properties creds = new Properties();
+
+    static {
+        try {
+            View.otherInform(CREDENTIALS_ADDRESS);
+            reader = new FileReader(CREDENTIALS_ADDRESS);
+            creds.load(reader);
+        } catch (IOException ioe) {
+            View.otherInform("Cannot load the credentials file");
+        }
+    }
 
     public static String doPOSTRequest(final String address, String code) throws IOException, InterruptedException {
-        FileReader reader = new FileReader(CREDENTIALS_ADDRESS);
-
-        Properties creds = new Properties();
-        creds.load(reader);
-
         String clientID = creds.getProperty("clientID");
         String clientSecret = creds.getProperty("clientSecret");
 

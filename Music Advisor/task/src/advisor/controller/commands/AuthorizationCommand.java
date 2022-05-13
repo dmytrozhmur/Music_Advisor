@@ -13,7 +13,7 @@ import com.google.gson.*;
 import static advisor.controller.utils.HttpHandler.*;
 
 public class AuthorizationCommand implements Command {
-    private static String code;
+    private String code;
 
     @Override
     public boolean execute(final String address, final DataSource source) {
