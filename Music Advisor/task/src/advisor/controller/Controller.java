@@ -78,7 +78,7 @@ public class Controller {
         return result;
     }
 
-    private Command makeCommand(String input) {
+    public Command makeCommand(String input) {
         String[] separatedInput = input.split(" ");
         String commandName = separatedInput[0];
         String commandParam = "";

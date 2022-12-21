@@ -1,6 +1,6 @@
 package advisor.controller.commands;
 
-import advisor.controller.utils.HttpServerWrapper;
+import advisor.server.HttpServerWrapper;
 import advisor.model.DataSource;
 import advisor.view.View;
 

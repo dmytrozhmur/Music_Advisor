@@ -1,4 +1,4 @@
-package advisor.controller.utils;
+package advisor.server;
 
 import advisor.view.View;
 import com.sun.net.httpserver.HttpServer;
@@ -9,7 +9,7 @@ import java.net.InetSocketAddress;
 import static advisor.controller.utils.HttpHandler.PORT;
 
 public class HttpServerWrapper {
-    private HttpServer server;
+    private final HttpServer server;
     private String code;
 
     public HttpServerWrapper() {
@@ -19,6 +19,8 @@ public class HttpServerWrapper {
     public String getCode() {
         return code;
     }
+
+    public HttpServer getServer() { return server; }
 
     public void waitForCode() {
         server.start();
