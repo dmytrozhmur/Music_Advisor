@@ -28,17 +28,9 @@ public class Controller {
 
         while (true) {
             String input = getUserInput();
-
-            if(source.getAccessToken() == null
-                    && !input.equals(AUTH)
-                    && !input.equals(EXIT)) {
-                view.noAccessInform();
-                continue;
-            }
-
+            if (checkAuthorization(input)) continue;
             int pageSize = view.getPageSize();
             List<String> content = source.getRequestedContent();
-
             while (input.equals(NEXT) || input.equals(PREV)) {
                 if(input.equals(NEXT) && !view.checkPages(++pageNumber, quantityOfPages))
                     pageNumber--;
@@ -55,17 +47,9 @@ public class Controller {
                 View.otherInform("No such command");
                 continue;
             }
-
             pageNumber = 1;
             String address = input.equals(AUTH) ? access : resource;
-            boolean isCommandPerformed = command.execute(address, source);
-
-            quantityOfPages = content.size() / pageSize
-                    + (content.size() % pageSize > 0 ? 1 : 0);
-
-            if (isCommandPerformed)
-                view.showPage(content, pageNumber, quantityOfPages);
-            else view.crashInform();
+            quantityOfPages = performCommand(pageNumber, pageSize, content, command, address);
         }
     }
 
@@ -88,5 +72,27 @@ public class Controller {
         }
 
         return CommandFactory.valueOf(commandName.toUpperCase()).getCommand(commandParam);
+    }
+
+    private int performCommand(int pageNumber, int pageSize, List<String> content, Command command, String address) {
+        int quantityOfPages;
+        boolean isCommandPerformed = command.execute(address, source);
+
+        quantityOfPages = content.size() / pageSize
+                + (content.size() % pageSize > 0 ? 1 : 0);
+        if (isCommandPerformed)
+            view.showPage(content, pageNumber, quantityOfPages);
+        else view.crashInform();
+        return quantityOfPages;
+    }
+
+    private boolean checkAuthorization(String input) {
+        if(source.getAccessToken() == null
+                && !input.equals(AUTH)
+                && !input.equals(EXIT)) {
+            view.noAccessInform();
+            return true;
+        }
+        return false;
     }
 }
